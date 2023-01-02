@@ -1,31 +1,31 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: nodeapp-prod
+  name: nodeapp-test
   labels:
-    name: nodeapp-prod
+    name: nodeapp-test
 
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: nodeapp-prod
-  name: nodeapp-prod-deployment
+  namespace: nodeapp-test
+  name: nodeapp-deployment-test
   labels:
-    app: nodeapp-prod
+    app: nodeapp-test
 spec:
   replicas: 4
   selector:
     matchLabels:
-      app: nodeapp-prod
+      app: nodeapp-test
   template:
     metadata:
       labels:
-        app: nodeapp-prod
+        app: nodeapp-test
     spec:
       containers:
-      - name: nodeserver-prod
-        image: jamesweb03:5000/nodeapp_prod:$BUILD_NUMBER
+      - name: nodeserver-test
+        image: jamesweb03:5000/nodeapp_test:$BUILD_NUMBER
         imagePullPolicy: Always
         ports:
         - containerPort: 4000
@@ -35,11 +35,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  namespace: nodeapp-prod
-  name: nodeapp-service-prod
+  namespace: nodeapp-test
+  name: nodeapp-service-test
 spec:
   selector:
-    app: nodeapp-prod
+    app: nodeapp-test
   type: LoadBalancer
   ports:
   - protocol: TCP
