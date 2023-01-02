@@ -1,13 +1,18 @@
-FROM mcr.microsoft.com/dotnet/aspnet
+FROM okteto/dotnetcore:6 AS dev
+WORKDIR /src
 
-COPY . /app
+COPY *.csproj ./
+RUN dotnet restore
+
+COPY . ./
+RUN dotnet build -c Release -o /app
+RUN dotnet publish  -c Release -o /app
+
+####################################
+
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS prod
 
 WORKDIR /app
-
-RUN ["dotnet", "restore"]
-
-RUN ["dotnet", "build"]
-
-EXPOSE 5000/tcp
-
-CMD ["dotnet", "run", "--server.urls", "http://*:5000"]
+COPY --from=dev /app .
+EXPOSE 5000
+ENTRYPOINT ["dotnet", "helloworld.dll"]
