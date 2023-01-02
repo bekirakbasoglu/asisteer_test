@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nodeapp-prod
+  labels:
+    name: nodeapp-prod
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: nodeapp-prod
+  name: nodeapp-prod-deployment
+  labels:
+    app: nodeapp-prod
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: nodeapp-prod
+  template:
+    metadata:
+      labels:
+        app: nodeapp-prod
+    spec:
+      containers:
+      - name: nodeserver-prod
+        image: jamesweb03:5000/nodeapp_prod:$BUILD_NUMBER
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 4000
+        
+        
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: nodeapp-prod
+  name: nodeapp-service-prod
+spec:
+  selector:
+    app: nodeapp-prod
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 5000
+    targetPort: 4000
+    nodePort: 31120
