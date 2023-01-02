@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nodeapp-test
+  labels:
+    name: nodeapp-test
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: nodeapp-test
+  name: nodeapp-deployment-test
+  labels:
+    app: nodeapp-test
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nodeapp-test
+  template:
+    metadata:
+      labels:
+        app: nodeapp-test
+    spec:
+      containers:
+      - name: nodeserver-test
+        image: jamesweb03:5000/nodeapp_test:$BUILD_NUMBER
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 4000
+        
+        
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: nodeapp-test
+  name: nodeapp-service-test
+spec:
+  selector:
+    app: nodeapp-test
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 5000
+    targetPort: 4000
+    nodePort: 31120
