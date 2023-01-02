@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp6.0</TargetFramework>
-    <RootNamespace>helloworld</RootNamespace>
+    <RootNamespace>helloworldtest</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
